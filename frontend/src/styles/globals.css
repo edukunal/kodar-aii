@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #050505;
+  --bg-surface: #09090b;
+  --bg-card: #0d0d14;
+  --bg-elevated: #111120;
+  --bg-input: #0a0a12;
+  --accent-blue: #5090ff;
+  --accent-purple: #8b5cf6;
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --text-faint: rgba(255, 255, 255, 0.18);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-dim: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.14);
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+.hero-glow {
+  background: radial-gradient(ellipse 60% 40% at 50% 30%, rgba(80, 144, 255, 0.12), transparent 70%);
+}
+
+.glass-card {
+  @apply rounded-2xl border border-border-dim backdrop-blur-xl;
+  background-color: color-mix(in srgb, var(--bg-card) 80%, transparent);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-accent-blue px-4 py-2 text-sm font-medium text-white transition hover:brightness-110 disabled:opacity-50;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-xl border border-border-soft px-4 py-2 text-sm font-medium text-text-primary transition;
+}
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.input-base {
+  @apply w-full rounded-xl border border-border-dim bg-bg-input px-4 py-2.5 text-sm text-text-primary outline-none transition;
+}
+.input-base::placeholder {
+  color: var(--text-muted);
+}
+.input-base:focus {
+  border-color: rgba(80, 144, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(80, 144, 255, 0.2);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--accent-blue);
+}

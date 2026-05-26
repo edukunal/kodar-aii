@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: kodari-api
+    runtime: node
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kodari-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: DISCORD_BOT_API_SECRET
+        generateValue: true
+
+databases:
+  - name: kodari-db
+    plan: free

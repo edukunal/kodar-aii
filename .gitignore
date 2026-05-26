@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+dist/
+out/
+build/
+
+# Environment (secrets)
+.env
+.env.local
+.env.*.local
+
+# Local DB + internal spec (contains API keys — keep local only)
+*.db
+KODARI_V2_MASTER_BUILD_PROMPT.md
+
+# Archives and media (keep repo small for GitHub)
+*.zip
+screenshots/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

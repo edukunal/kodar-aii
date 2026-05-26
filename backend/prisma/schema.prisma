@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String?   @unique
+  displayName     String
+  username        String    @unique
+  avatarUrl       String?
+  discordId       String?   @unique
+  githubId        String?   @unique
+  bio             String?
+  status          String    @default("online")
+  memberBadge     String    @default("member")
+  tokenBalance    Int       @default(500)
+  tokensEarned    Int       @default(500)
+  tokensSpent     Int       @default(0)
+  affiliateCode   String?   @unique
+  preferences     String    @default("{}")
+  isPremium       Boolean   @default(false)
+  termsAcceptedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  oauthAccounts OAuthAccount[]
+  sessions      ProjectSession[]
+  apiKeys       ApiKey[]
+  tokenTx       TokenTransaction[]
+  refreshTokens RefreshToken[]
+}
+
+model OAuthAccount {
+  id           String   @id @default(cuid())
+  provider     String
+  providerId   String
+  accessToken  String?
+  refreshToken String?
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@unique([provider, providerId])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model ProjectSession {
+  id           String    @id @default(cuid())
+  kodariId     String    @unique
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  projectType  String    @default("java_plugin")
+  platform     String    @default("minecraft_java")
+  buildTool    String?   @default("gradle")
+  model        String    @default("claude-sonnet-4.5")
+  visibility   String    @default("PRIVATE")
+  isFavorite   Boolean   @default(false)
+  isDeleted    Boolean   @default(false)
+  tokensUsed   Int       @default(0)
+  previewUrl   String?
+  files        String    @default("[]")
+  messages     String    @default("[]")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+}
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+}
+
+model TokenTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Int
+  type        String
+  description String
+  metadata    String?
+  createdAt   DateTime @default(now())
+}
+
+model ModelDefinition {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  description String
+  tokenCost   Int
+  category    String @default("general")
+}
